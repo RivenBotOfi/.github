@@ -9,11 +9,19 @@ et tableau de bord web.
 
 | Dépôt | Ce que c'est |
 |---|---|
-| [`RivenBot`](https://github.com/RivenBotOfi/RivenBot) | Le bot, l'API, le tableau de bord et le raccourcisseur d'URL — un seul dépôt, cinq services |
+| [`RivenBot`](https://github.com/RivenBotOfi/RivenBot) | Le bot Discord, l'API, le raccourcisseur d'URL et le moniteur de statut |
+| [`rivenbot-dashboard`](https://github.com/RivenBotOfi/rivenbot-dashboard) | Le tableau de bord web — React, TypeScript, Vite, Tailwind |
 
-## Comment c'est déployé
+## Pourquoi deux dépôts et pas cinq
 
-Cinq processus PM2 à partir d'une base de code unique : le bot Discord, l'API du
-tableau de bord, le raccourcisseur d'URL, le moniteur de statut et le serveur audio.
-Chacun dans son propre conteneur, derrière un reverse proxy, sans aucun port ouvert
-sur Internet — tout passe par un tunnel.
+Le tableau de bord est séparé parce qu'il l'est réellement : 169 fichiers
+TypeScript qui n'importent **aucun** fichier du serveur, avec leur propre build.
+
+Les quatre services backend restent ensemble, et c'est délibéré — ils partagent
+31 modèles de données importés par 178 fichiers. Les séparer imposerait
+d'extraire un paquet commun et de réécrire ces 178 imports, sans rien gagner.
+
+## Déploiement
+
+Cinq processus PM2, chacun dans son conteneur, derrière un reverse proxy.
+Aucun port ouvert sur Internet : tout passe par un tunnel.
